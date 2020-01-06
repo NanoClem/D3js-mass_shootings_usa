@@ -85,17 +85,18 @@ svg.selectAll("path")
 
 		 
 // Map the cities I have lived in!
-d3.csv("datasets/mass-shootings-in-america.csv", function(data) {
+d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
 
 svg.selectAll("circle")
 	.data(data)
 	.enter()
 	.append("circle")
 	.attr("cx", function(d) {
+		console.log([d.Longitude, d.Latitude]);
 		return projection([d.Longitude, d.Latitude])[0];
 	})
 	.attr("cy", function(d) {
-		return projection([d.Longitude,d.Latitude])[1];
+		return projection([d.Longitude, d.Latitude])[1];
 	})
 	.attr("r", function(d) {
 		return Math.sqrt(d.Total_Number_of_Victims) * 4;
@@ -109,7 +110,7 @@ svg.selectAll("circle")
     	div.transition()        
       	   .duration(200)      
            .style("opacity", .9);      
-           div.text(d.place)
+           div.text(d.Title)
            .style("left", (d3.event.pageX) + "px")     
            .style("top", (d3.event.pageY - 28) + "px");    
 	})   
