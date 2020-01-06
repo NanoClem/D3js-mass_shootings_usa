@@ -1,5 +1,3 @@
-
-		
 //Width and height of map
 var width = 960;
 var height = 500;
