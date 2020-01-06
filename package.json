@@ -1,0 +1,22 @@
+{
+  "name": "d3js-mass_shootings_usa",
+  "version": "1.0.0",
+  "description": "data visualisation of mass shootings in usa",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NanoClem/D3js-mass_shootings_usa.git"
+  },
+  "author": "Clement Decoopman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NanoClem/D3js-mass_shootings_usa/issues"
+  },
+  "homepage": "https://github.com/NanoClem/D3js-mass_shootings_usa#readme",
+  "dependencies": {
+    "d3": "^5.15.0"
+  }
+}
