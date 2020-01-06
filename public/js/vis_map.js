@@ -92,14 +92,14 @@ svg.selectAll("circle")
 	.enter()
 	.append("circle")
 	.attr("cx", function(d) {
-		console.log([d.Longitude, d.Latitude]);
+		//console.log([d.Longitude, d.Latitude]);
 		return projection([d.Longitude, d.Latitude])[0];
 	})
 	.attr("cy", function(d) {
 		return projection([d.Longitude, d.Latitude])[1];
 	})
 	.attr("r", function(d) {
-		return Math.sqrt(d.Total_Number_of_Victims) * 4;
+		return Math.sqrt(d.Total_Number_of_Victims)*2;
 	})
 		.style("fill", "rgb(217,91,67)")	
 		.style("opacity", 0.85)	
