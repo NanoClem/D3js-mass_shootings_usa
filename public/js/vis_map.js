@@ -16,7 +16,7 @@ var path = d3.geo.path()               // path generator that will convert GeoJS
 		
 // Define linear scale for output
 var color = d3.scale.linear()
-			  .range(["rgb(42,10,51)","rgb(153,27,168)","rgb(226,172,240)","rgb(226,172,240)"]);
+			  .range(["rgb(53,204,204)","rgb(51,107,107)","rgb(51,51,51)","rgb(51,0,0)"]);
 
 var legendText = ["150+", "100-150", "50-100", "0-50"];
 
@@ -86,8 +86,9 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
 	var value =d.properties.r;
 	console.log(value);
 	if (value) {
-	
 	return color(value);
+	}else{
+		return color(0);
 	}
 });
 
