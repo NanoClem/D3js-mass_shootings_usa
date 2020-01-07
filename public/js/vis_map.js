@@ -1,3 +1,5 @@
+
+
 //Width and height of map
 var width = 960;
 var height = 500;
@@ -14,9 +16,9 @@ var path = d3.geo.path()               // path generator that will convert GeoJS
 		
 // Define linear scale for output
 var color = d3.scale.linear()
-			  .range(["rgb(213,222,217)","rgb(69,173,168)","rgb(84,36,55)","rgb(217,91,67)"]);
+			  .range(["rgb(42,10,51)","rgb(153,27,168)","rgb(226,172,240)","rgb(226,172,240)"]);
 
-var legendText = ["Cities Lived", "States Lived", "States Visited", "Nada"];
+var legendText = ["150+", "100-150", "50-100", "0-50"];
 
 //Create SVG element and append map to the SVG
 var svg = d3.select("body")
@@ -31,38 +33,47 @@ var div = d3.select("body")
     		.style("opacity", 0);
 
 // Load in my states data!
-d3.csv("datasets/stateslived.csv", function(data) {
-color.domain([0,1,2,3]); // setting the range of the input data
+d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
+	var expensesCount = d3.nest()
+            .key(function(data) { return data.State; })
+            .rollup(function(v) { 
+                return {
+                    Total_Number_of_Victims : d3.sum(v, function(e) { return e.Total_Number_of_Victims; }),
+                    r : reducevalue(d3.sum(v, function(e) { return e.Total_Number_of_Victims; }))
+                };
+            }).entries(data);
+	color.domain([0,1,2,3]); // setting the range of the input data
 
-// Load GeoJSON data and merge with states data
-d3.json("datasets/us-states.json", function(json) {
+	// Load GeoJSON data and merge with states data
+	d3.json("datasets/us-states.json", function(json) {
 
-// Loop through each state data value in the .csv file
-for (var i = 0; i < data.length; i++) {
-
-	// Grab State Name
-	var dataState = data[i].state;
-
-	// Grab data value 
-	var dataValue = data[i].visited;
-
-	// Find the corresponding state inside the GeoJSON
-	for (var j = 0; j < json.features.length; j++)  {
-		var jsonState = json.features[j].properties.name;
-
-		if (dataState == jsonState) {
-
-		// Copy the data value into the JSON
-		json.features[j].properties.visited = dataValue; 
-
-		// Stop looking through the JSON
-		break;
-		}
-	}
-}
+		// Loop through each state data value in the .csv file
+		for (var i = 0; i < expensesCount.length; i++) {
 		
-// Bind the data to the SVG and create one path per GeoJSON feature
-svg.selectAll("path")
+		// Grab State Name
+		var dataState = expensesCount[i].key;
+
+		// Grab data value 
+		var dataValue = expensesCount[i].values.r;
+		
+		// Find the corresponding state inside the GeoJSON
+		for (var j = 0; j < json.features.length; j++)  {
+			var jsonState = json.features[j].properties.name;
+
+			if (dataState == jsonState) {
+
+			// Copy the data value into the JSON
+			json.features[j].properties.r = dataValue; 
+
+			// Stop looking through the JSON
+			break;
+			}
+		}
+		//console.log(data)
+	}
+	
+	// Bind the data to the SVG and create one path per GeoJSON feature
+	svg.selectAll("path")
 	.data(json.features)
 	.enter()
 	.append("path")
@@ -70,16 +81,13 @@ svg.selectAll("path")
 	.style("stroke", "#fff")
 	.style("stroke-width", "1")
 	.style("fill", function(d) {
-
+	
 	// Get data value
-	var value = d.properties.visited;
-
+	var value =d.properties.r;
+	console.log(value);
 	if (value) {
-		//If value exists…
-		return color(value);
-	} else {
-		//If value is undefined…
-		return "rgb(213,222,217)";
+	
+	return color(value);
 	}
 });
 
