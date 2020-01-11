@@ -35,6 +35,7 @@ var key = function(d){ return d.data.label; };
 // IMPORT DATA
 d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
 	
+
 	// ALL TYPES OF PLACES WHERE SHOOTINGS HAPPENED
 	var domains = d3.map(data, function(d) {return d.Place_Type;}).keys();
 
@@ -49,23 +50,28 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
 		}
 	});
 
+
 	// COLORS
 	var color = d3.scale.ordinal()
 		.domain(domains)
 		.range(["#7d0956", "#07adad", "#FF0000", "#07423d"]);
 
 
-
 	// GENERATE OUR DATA FOR THE CHART
 	function generateData() {
 		var labels = color.domain();
 		return labels.map(function(label){
-			return { label: label, value: countPlaces[label] }
+			return { label: label, value: countPlaces[label] };
 		});
 	}
-	
 
-	change(generateData());
+	// ASCENDING SORT
+	var gData = generateData().sort(function(a, b) {
+		return a.value - b.value;
+	});
+	
+	console.log(gData);		
+	change(gData);
 
 
 	function change(data) {
@@ -79,9 +85,8 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
 			.style("fill", function(d) { return color(d.data.label); })
 			.attr("class", "slice");
 
-		slice		
-			.transition().duration(1000)
-			.attrTween("d", function(d) {
+		slice.transition().duration(1000)
+			 .attrTween("d", function(d) {
 				this._current = this._current || d;
 				var interpolate = d3.interpolate(this._current, d);
 				this._current = interpolate(0);
@@ -105,7 +110,7 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
 				return d.data.label;
 			});
 		
-		function midAngle(d){
+		function midAngle(d) {
 			return d.startAngle + (d.endAngle - d.startAngle)/2;
 		}
 
@@ -121,7 +126,7 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
 					return "translate("+ pos +")";
 				};
 			})
-			.styleTween("text-anchor", function(d){
+			.styleTween("text-anchor", function(d) {
 				this._current = this._current || d;
 				var interpolate = d3.interpolate(this._current, d);
 				this._current = interpolate(0);
@@ -143,7 +148,7 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
 			.append("polyline");
 
 		polyline.transition().duration(1000)
-			.attrTween("points", function(d){
+			.attrTween("points", function(d) {
 				this._current = this._current || d;
 				var interpolate = d3.interpolate(this._current, d);
 				this._current = interpolate(0);
