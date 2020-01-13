@@ -1,5 +1,3 @@
-
-
 //Width and height of map
 var width = 960;
 var height = 500;
@@ -41,7 +39,8 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
                     Total_Number_of_Victims : d3.sum(v, function(e) { return e.Total_Number_of_Victims; }),
                     r : reducevalue(d3.sum(v, function(e) { return e.Total_Number_of_Victims; }))
                 };
-            }).entries(data);
+			}).entries(data);
+			console.log(JSON.stringify(expensesCount));
 	color.domain([0,1,2,3]); // setting the range of the input data
 
 	// Load GeoJSON data and merge with states data
@@ -118,10 +117,14 @@ svg.selectAll("circle")
 	.on("mouseover", function(d) {      
     	div.transition()        
       	   .duration(200)      
-           .style("opacity", .9);      
-           div.text(d.Title)
+           .style("opacity", 1);      
+           div.text(d.Total_Number_of_Victims + " Victimes")
            .style("left", (d3.event.pageX) + "px")     
-           .style("top", (d3.event.pageY - 28) + "px");    
+		   .style("top", (d3.event.pageY - 28) + "px");
+		   document.getElementById("Etat").textContent ="Etat : " + d.State;
+		   document.getElementById("Ville").textContent ="Ville : " + d.City;
+		   document.getElementById("Fusillade").textContent ="Titre de la fusillade : " + d.Title;
+
 	})   
 
     // fade out tooltip on mouse out               

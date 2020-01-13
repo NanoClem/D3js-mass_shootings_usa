@@ -7,11 +7,11 @@
 
 function reducevalue(value){
     
-    if (value < 50){
+    if (value <= 50){
         value = 0;
-    }else if(value < 100){
+    }else if(value <= 100 ){
         value = 1;
-    }else if(value < 150){
+    }else if(value <= 150){
         value = 2;
     }else{
         value = 3;
