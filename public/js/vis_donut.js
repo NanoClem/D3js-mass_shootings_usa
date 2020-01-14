@@ -1,17 +1,23 @@
-var svg = d3.select("body")
-	.append("svg")
-	.append("g");
+let dWidth = 960;
+let dHeight = 450;
+let radius = Math.min(dWidth, dHeight) / 2;
 
-svg.append("g")
+let svgDonut = d3.select("#donut")
+	.attr("width", dWidth)
+	.attr("height", dHeight)
+	.append("g")
+	.attr("transform", "translate(" + dWidth / 2 + "," + dHeight / 2 + ")");
+
+
+// GROUPS
+svgDonut.append("g")
 	.attr("class", "slices");
-svg.append("g")
+svgDonut.append("g")
 	.attr("class", "labels");
-svg.append("g")
+svgDonut.append("g")
 	.attr("class", "lines");
 
-var width = 960,
-    height = 450,
-	radius = Math.min(width, height) / 2;
+console.log(svgDonut);
 
 var pie = d3.layout.pie()
 	.sort(null)
@@ -26,8 +32,6 @@ var arc = d3.svg.arc()
 var outerArc = d3.svg.arc()
 	.innerRadius(radius * 0.9)
 	.outerRadius(radius * 0.9);
-
-svg.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
 var key = function(d){ return d.data.label; };
 
@@ -69,15 +73,14 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
 	var gData = generateData().sort(function(a, b) {
 		return a.value - b.value;
 	});
-	
-	console.log(gData);		
+		
 	change(gData);
 
 
 	function change(data) {
 
 		/* ------- PIE SLICES -------*/
-		var slice = svg.select(".slices").selectAll("path.slice")
+		var slice = svgDonut.select(".slices").selectAll("path.slice")
 			.data(pie(data), key);
 
 		slice.enter()
@@ -100,7 +103,7 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
 
 		/* ------- TEXT LABELS -------*/
 
-		var text = svg.select(".labels").selectAll("text")
+		var text = svgDonut.select(".labels").selectAll("text")
 			.data(pie(data), key);
 
 		text.enter()
@@ -141,7 +144,7 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
 
 		/* ------- SLICE TO TEXT POLYLINES -------*/
 
-		var polyline = svg.select(".lines").selectAll("polyline")
+		var polyline = svgDonut.select(".lines").selectAll("polyline")
 			.data(pie(data), key);
 		
 		polyline.enter()

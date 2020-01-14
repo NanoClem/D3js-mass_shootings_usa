@@ -2,6 +2,18 @@
 var width = 960;
 var height = 500;
 
+//Create SVG element and append map to the SVG
+var svg = d3.select("#map")
+			.attr("width", width)
+			.attr("height", height)
+			.append("g");
+
+// Append Div for tooltip to SVG
+var div = d3.select("body")
+		    .append("div")   
+    		.attr("class", "tooltip")               
+			.style("opacity", 0);
+			
 // D3 Projection
 var projection = d3.geo.albersUsa()
 				   .translate([width/2, height/2])    // translate to center of screen
@@ -17,18 +29,8 @@ var color = d3.scale.linear()
 			  .range(["rgb(53,204,204)","rgb(51,107,107)","rgb(51,51,51)","rgb(51,0,0)"]);
 
 var legendText = ["150+", "100-150", "50-100", "0-50"];
-
-//Create SVG element and append map to the SVG
-var svg = d3.select("body")
-			.append("svg")
-			.attr("width", width)
-			.attr("height", height);
         
-// Append Div for tooltip to SVG
-var div = d3.select("body")
-		    .append("div")   
-    		.attr("class", "tooltip")               
-    		.style("opacity", 0);
+
 
 // Load in my states data!
 d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
@@ -136,7 +138,7 @@ svg.selectAll("circle")
 });  
         
 // Modified Legend Code from Mike Bostock: http://bl.ocks.org/mbostock/3888852
-var legend = d3.select("body").append("svg")
+var legend = d3.select("#legend")
       			.attr("class", "legend")
      			.attr("width", 140)
     			.attr("height", 200)
