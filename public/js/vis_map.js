@@ -14,9 +14,9 @@ var path = d3.geo.path()               // path generator that will convert GeoJS
 		
 // Define linear scale for output
 var color = d3.scale.linear()
-			  .range(["rgb(213,222,217)","rgb(69,173,168)","rgb(84,36,55)","rgb(217,91,67)"]);
+			  .range(["rgb(53,204,204)","rgb(51,107,107)","rgb(51,51,51)","rgb(51,0,0)"]);
 
-var legendText = ["Cities Lived", "States Lived", "States Visited", "Nada"];
+var legendText = ["150+", "100-150", "50-100", "0-50"];
 
 //Create SVG element and append map to the SVG
 var svg = d3.select("body")
@@ -31,38 +31,48 @@ var div = d3.select("body")
     		.style("opacity", 0);
 
 // Load in my states data!
-d3.csv("datasets/stateslived.csv", function(data) {
-color.domain([0,1,2,3]); // setting the range of the input data
+d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
+	var expensesCount = d3.nest()
+            .key(function(data) { return data.State; })
+            .rollup(function(v) { 
+                return {
+                    Total_Number_of_Victims : d3.sum(v, function(e) { return e.Total_Number_of_Victims; }),
+                    r : reducevalue(d3.sum(v, function(e) { return e.Total_Number_of_Victims; }))
+                };
+			}).entries(data);
+			console.log(JSON.stringify(expensesCount));
+	color.domain([0,1,2,3]); // setting the range of the input data
 
-// Load GeoJSON data and merge with states data
-d3.json("datasets/us-states.json", function(json) {
+	// Load GeoJSON data and merge with states data
+	d3.json("datasets/us-states.json", function(json) {
 
-// Loop through each state data value in the .csv file
-for (var i = 0; i < data.length; i++) {
-
-	// Grab State Name
-	var dataState = data[i].state;
-
-	// Grab data value 
-	var dataValue = data[i].visited;
-
-	// Find the corresponding state inside the GeoJSON
-	for (var j = 0; j < json.features.length; j++)  {
-		var jsonState = json.features[j].properties.name;
-
-		if (dataState == jsonState) {
-
-		// Copy the data value into the JSON
-		json.features[j].properties.visited = dataValue; 
-
-		// Stop looking through the JSON
-		break;
-		}
-	}
-}
+		// Loop through each state data value in the .csv file
+		for (var i = 0; i < expensesCount.length; i++) {
 		
-// Bind the data to the SVG and create one path per GeoJSON feature
-svg.selectAll("path")
+		// Grab State Name
+		var dataState = expensesCount[i].key;
+
+		// Grab data value 
+		var dataValue = expensesCount[i].values.r;
+		
+		// Find the corresponding state inside the GeoJSON
+		for (var j = 0; j < json.features.length; j++)  {
+			var jsonState = json.features[j].properties.name;
+
+			if (dataState == jsonState) {
+
+			// Copy the data value into the JSON
+			json.features[j].properties.r = dataValue; 
+
+			// Stop looking through the JSON
+			break;
+			}
+		}
+		//console.log(data)
+	}
+	
+	// Bind the data to the SVG and create one path per GeoJSON feature
+	svg.selectAll("path")
 	.data(json.features)
 	.enter()
 	.append("path")
@@ -70,16 +80,14 @@ svg.selectAll("path")
 	.style("stroke", "#fff")
 	.style("stroke-width", "1")
 	.style("fill", function(d) {
-
+	
 	// Get data value
-	var value = d.properties.visited;
-
+	var value =d.properties.r;
+	console.log(value);
 	if (value) {
-		//If value exists…
-		return color(value);
-	} else {
-		//If value is undefined…
-		return "rgb(213,222,217)";
+	return color(value);
+	}else{
+		return color(0);
 	}
 });
 
@@ -92,14 +100,14 @@ svg.selectAll("circle")
 	.enter()
 	.append("circle")
 	.attr("cx", function(d) {
-		console.log([d.Longitude, d.Latitude]);
+		//console.log([d.Longitude, d.Latitude]);
 		return projection([d.Longitude, d.Latitude])[0];
 	})
 	.attr("cy", function(d) {
 		return projection([d.Longitude, d.Latitude])[1];
 	})
 	.attr("r", function(d) {
-		return Math.sqrt(d.Total_Number_of_Victims) * 4;
+		return Math.sqrt(d.Total_Number_of_Victims)*2;
 	})
 		.style("fill", "rgb(217,91,67)")	
 		.style("opacity", 0.85)	
@@ -109,10 +117,14 @@ svg.selectAll("circle")
 	.on("mouseover", function(d) {      
     	div.transition()        
       	   .duration(200)      
-           .style("opacity", .9);      
-           div.text(d.Title)
+           .style("opacity", 1);      
+           div.text(d.Total_Number_of_Victims + " Victimes")
            .style("left", (d3.event.pageX) + "px")     
-           .style("top", (d3.event.pageY - 28) + "px");    
+		   .style("top", (d3.event.pageY - 28) + "px");
+		   document.getElementById("Etat").textContent ="Etat : " + d.State;
+		   document.getElementById("Ville").textContent ="Ville : " + d.City;
+		   document.getElementById("Fusillade").textContent ="Titre de la fusillade : " + d.Title;
+
 	})   
 
     // fade out tooltip on mouse out               
