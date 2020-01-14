@@ -42,7 +42,7 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
                     r : reducevalue(d3.sum(v, function(e) { return e.Total_Number_of_Victims; }))
                 };
 			}).entries(data);
-			console.log(JSON.stringify(expensesCount));
+			// console.log(JSON.stringify(expensesCount));
 	color.domain([0,1,2,3]); // setting the range of the input data
 
 	// Load GeoJSON data and merge with states data
@@ -85,7 +85,7 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
 	
 	// Get data value
 	var value =d.properties.r;
-	console.log(value);
+	// console.log(value);
 	if (value) {
 	return color(value);
 	}else{

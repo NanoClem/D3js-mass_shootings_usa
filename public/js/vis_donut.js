@@ -17,7 +17,6 @@ svgDonut.append("g")
 svgDonut.append("g")
 	.attr("class", "lines");
 
-console.log(svgDonut);
 
 var pie = d3.layout.pie()
 	.sort(null)
@@ -38,7 +37,6 @@ var key = function(d){ return d.data.label; };
 
 // IMPORT DATA
 d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
-	
 
 	// ALL TYPES OF PLACES WHERE SHOOTINGS HAPPENED
 	var domains = d3.map(data, function(d) {return d.Place_Type;}).keys();
@@ -74,6 +72,7 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
 		return a.value - b.value;
 	});
 		
+	console.log(gData);
 	change(gData);
 
 
