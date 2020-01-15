@@ -16,14 +16,10 @@ div.tooltip {
 	border-radius: 8px;           
 	pointer-events: none;         
 }
-        
-/* Legend Font Style */
-body {
-	font: 11px sans-serif;
-}
-        
+              
 /* Legend Position Style */
 .legend {
+	font: 11px sans-serif;
 	position:absolute;
 	left:800px;
 	top:350px;
