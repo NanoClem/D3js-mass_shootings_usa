@@ -8,6 +8,11 @@ let svgDonut = d3.select("#donut")
 	.append("g")
 	.attr("transform", "translate(" + dWidth / 2 + "," + dHeight / 2 + ")");
 
+let divDonut = d3.select("body")
+	.append("div")   
+	.attr("class", "tooltip")               
+	.style("opacity", 0);
+
 
 // GROUPS
 svgDonut.append("g")
@@ -39,16 +44,14 @@ let key = function(d){ return d.data.label; };
 d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
 
 	// ALL TYPES OF PLACES WHERE SHOOTINGS HAPPENED
-	let domains = getLabels();
+	let domain = getLabels();
 
 	// COUNT OCCURRENCES IN PLACE CATEGORIES
 	let donutData = countOccurences(data);
 	// console.log(countPlaces);
 
 	// COLORS
-	let color = d3.scale.ordinal()
-		.domain(domains)
-		.range(["#390B06", "#6F332D", "#17193C", "#3A6B45", "#568A62"]);
+	let color = generateColors(["#390B06", "#6F332D", "#17193C", "#3A6B45", "#568A62"], domain)
 
 	// ASCENDING SORT
 	let gData = donutData.sort(function(a, b) {
@@ -68,10 +71,28 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
 		slice.enter()
 			.insert("path")
 			.style("fill", function(d) { return color(d.data.label); })
-			.attr("class", "slice");
+			.attr("class", "slice")
+			
+			// ON SLICE MOUSEOVER
+			.on("mouseover", function(d) {
+				divDonut.transition()        
+					.duration(200)      
+					.style("opacity", 1);      
+				divDonut.text(d.data.count + " Victimes")
+					.style("left", (d3.event.pageX) + "px")     
+					.style("top", (d3.event.pageY - 28) + "px");
+			})
+
+			// ON SLICE MOUSEOUT
+			.on("mouseout", function(d) {       
+				divDonut.transition()        
+				   .duration(200)      
+				   .style("opacity", 0);   
+			});
+
 
 		slice.transition().duration(1000)
-			 .attrTween("d", function(d) {
+			.attrTween("d", function(d) {
 				this._current = this._current || d;
 				let interpolate = d3.interpolate(this._current, d);
 				this._current = interpolate(0);
@@ -80,8 +101,6 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
 				};
 			})
 
-		slice.exit()
-			.remove();
 
 		/* ------- TEXT LABELS -------*/
 
