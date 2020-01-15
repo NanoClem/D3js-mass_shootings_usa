@@ -51,11 +51,26 @@ function getLabels() {
 
 
 /**
+ * Returns the percentage of
+ * @param {*} value
+ * @param {Array<JSON>} data 
+ */
+function getPercentage(value, data) {
+    let local = JSON.parse(JSON.stringify(data));   // deep copy of JSON array
+    let sum = 0;
+    local.forEach(function (d) {
+        sum += d.count;
+    })
+    return Math.floor((value/sum)*100);
+}
+
+
+/**
  * Count occurences in data
  * @param {Array<JSON>} data 
  */
 function countOccurences(data) {
-    let local = JSON.parse(JSON.stringify(data));   // deep copy of JSON array
+    let local = JSON.parse(JSON.stringify(data));   
     local.forEach(function (d) {
         let place = d.Place_Type;
         categories.forEach(function (c) {

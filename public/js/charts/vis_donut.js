@@ -10,7 +10,7 @@ let svgDonut = d3.select("#donut")
 
 let divDonut = d3.select("body")
 	.append("div")   
-	.attr("class", "tooltip")               
+	.attr("class", "donutTooltip")               
 	.style("opacity", 0);
 
 
@@ -51,7 +51,7 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
 	// console.log(countPlaces);
 
 	// COLORS
-	let color = generateColors(["#390B06", "#6F332D", "#17193C", "#3A6B45", "#568A62"], domain)
+	let color = generateColors(["#390B06", "#6F332D", "#17193C", "#647375", "#a3bcbf"], domain)
 
 	// ASCENDING SORT
 	let gData = donutData.sort(function(a, b) {
@@ -78,7 +78,7 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
 				divDonut.transition()        
 					.duration(200)      
 					.style("opacity", 1);      
-				divDonut.text(d.data.count + " Victimes")
+				divDonut.text(getPercentage(d.data.count, gData) + "%")
 					.style("left", (d3.event.pageX) + "px")     
 					.style("top", (d3.event.pageY - 28) + "px");
 			})
