@@ -22,3 +22,16 @@ div.donutTooltip {
     border-radius: 8px;           
     pointer-events: none;         
 }
+
+div.donutTooltip {   
+    position: absolute;           
+    text-align: center;           
+    width: 60px;                  
+    height: 18px;                 
+    padding: 2px;             
+    font: 12px sans-serif;        
+    background: white;   
+    border: 1px solid;      
+    border-radius: 8px;           
+    pointer-events: none;         
+}

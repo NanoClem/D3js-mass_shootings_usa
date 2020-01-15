@@ -2,9 +2,19 @@
 var width = 960;
 var height = 500;
 
-// Dimension of donut for each point of map
+// Map's donut params
 let dMapWidth = 660;
 let dMapHeight = 250;
+let dColors = ["#390B06", "#6F332D", "#17193C", "#647375", "#a3bcbf"];
+let mapDonut = new Donut(dMapWidth, dMapHeight, "#mapDonut", "mDonutTooltip");
+
+let dMapCategories = [
+    { label: "Home and neighborhood", sub: ["Residential home/Neighborhood, Retail/Wholesale/Services facility", "Residential home/Neighborhood"], count: 0 },
+    { label: "School and educationnal", sub: ["Primary school", "Secondary school", "College/University/Adult education"], count: 0 },
+    { label: "Public facilities", sub: ["Medical/Care", "Public transportation", "Park/Wilderness", "Place of worship", "Restaurant/Cafe", "Retail/Wholesale/Services facility", "Entertainment Venue", "Street/Highway"], count: 0 },
+    { label: "Government and military facilities", sub: ["Government facility", "Military facility"], count: 0 },
+    { label: "Work place", sub: ["Company/Factory/Office"], count: 0 }
+];
 
 //Create SVG element and append map to the SVG
 var svg = d3.select("#map")
@@ -16,12 +26,6 @@ var svg = d3.select("#map")
 var div = d3.select("body")
 	.append("div")   
 	.attr("class", "tooltip")               
-	.style("opacity", 0);
-
-// MAP DONUT TOOLTIP
-let divMapDonut = d3.select("body")
-	.append("div")
-	.attr("class", "mapDonutTooltip")
 	.style("opacity", 0);
 
 			
@@ -128,10 +132,10 @@ svg.selectAll("circle")
 	// Modification of custom tooltip code provided by Malcolm Maclean, "D3 Tips and Tricks" 
 	// http://www.d3noob.org/2013/01/adding-tooltips-to-d3js-graph.html
 	.on("mouseover", function(d) {
-		//TEST
-		clearMapDonut("#mapDonut", "div.mapDonutTooltip");
-		generateMapDonut(dMapWidth, dMapHeight, data);
-		
+		// GENERATE A NEW DONUT
+		mapDonut.clear();
+		mapDonut.generateDonut(dColors, dMapCategories, data);
+
     	div.transition()        
       	   .duration(200)      
            .style("opacity", 1);      
@@ -146,7 +150,6 @@ svg.selectAll("circle")
 
     // fade out tooltip on mouse out               
     .on("mouseout", function(d) {
-		//clearMapDonut("#mapDonut", "div.mapDonutTooltip");
         div.transition()        
            .duration(500)      
            .style("opacity", 0);   
