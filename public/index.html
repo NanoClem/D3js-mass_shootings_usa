@@ -4,29 +4,32 @@
 	<head>
 		<meta charset="utf-8">
 		<script src="http://d3js.org/d3.v3.min.js"></script>
-		<!-- <link rel="stylesheet" href="css/main_style.css" /> -->
+		<link rel="stylesheet" href="css/main_style.css" />
 		<link rel="stylesheet" href="css/map_style.css" />
 		<link rel="stylesheet" href="css/donut_style.css" />
 	</head>
 
 	<body>
-
 		<div class="map_chart">
-			<h2>Mass shooting in USA</h2>
+			<h1>Mass shooting in USA</h1>
 			<svg id="map"></svg>
 			<svg id="legend"></svg>
-			<div id="Etat"></div>
-			<div id="Ville"></div>
-			<div id="Fusillade"></div>
+
+			<div class="infos">
+				<div id="Etat">Passez la souris sur les points de la carte pour plus d'onformation</div>
+				<div id="Ville"></div>
+				<div id="Fusillade"></div>
+			<div>
 		</div>
 		
 		<div class="donut_chart">
+			<h1>Most targeted places</h1>
 			<svg id="donut"></svg>
 		</div>
 		
-		<script type="text/javascript" src="js/state_victims.js"></script>
-		<script type="text/javascript" src="js/vis_map.js"></script>
-		<script type="text/javascript" src="js/vis_donut.js"></script>
+		<script type="text/javascript" src="js/utils.js"></script>
+		<script type="text/javascript" src="js/charts/vis_map.js"></script>
+		<script type="text/javascript" src="js/charts/vis_donut.js"></script>
 	</body>
 
 </html>
