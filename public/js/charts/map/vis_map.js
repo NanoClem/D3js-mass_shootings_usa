@@ -2,17 +2,28 @@
 var width = 960;
 var height = 500;
 
+// Dimension of donut for each point of map
+let dMapWidth = 660;
+let dMapHeight = 250;
+
 //Create SVG element and append map to the SVG
 var svg = d3.select("#map")
-			.attr("width", width)
-			.attr("height", height)
-			.append("g");
+	.attr("width", width)
+	.attr("height", height)
+	.append("g");
 
 // Append Div for tooltip to SVG
 var div = d3.select("body")
-		    .append("div")   
-    		.attr("class", "tooltip")               
-			.style("opacity", 0);
+	.append("div")   
+	.attr("class", "tooltip")               
+	.style("opacity", 0);
+
+// MAP DONUT TOOLTIP
+let divMapDonut = d3.select("body")
+	.append("div")
+	.attr("class", "mapDonutTooltip")
+	.style("opacity", 0);
+
 			
 // D3 Projection
 var projection = d3.geo.albersUsa()
@@ -116,7 +127,11 @@ svg.selectAll("circle")
 
 	// Modification of custom tooltip code provided by Malcolm Maclean, "D3 Tips and Tricks" 
 	// http://www.d3noob.org/2013/01/adding-tooltips-to-d3js-graph.html
-	.on("mouseover", function(d) {      
+	.on("mouseover", function(d) {
+		//TEST
+		clearMapDonut("#mapDonut", "div.mapDonutTooltip");
+		generateMapDonut(dMapWidth, dMapHeight, data);
+		
     	div.transition()        
       	   .duration(200)      
            .style("opacity", 1);      
@@ -130,7 +145,8 @@ svg.selectAll("circle")
 	})   
 
     // fade out tooltip on mouse out               
-    .on("mouseout", function(d) {       
+    .on("mouseout", function(d) {
+		//clearMapDonut("#mapDonut", "div.mapDonutTooltip");
         div.transition()        
            .duration(500)      
            .style("opacity", 0);   

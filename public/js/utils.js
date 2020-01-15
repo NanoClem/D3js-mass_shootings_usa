@@ -70,17 +70,19 @@ function getPercentage(value, data) {
  * @param {Array<JSON>} data 
  */
 function countOccurences(data) {
-    let local = JSON.parse(JSON.stringify(data));   
+    
+    let local = JSON.parse(JSON.stringify(data));
+    let localCat = JSON.parse(JSON.stringify(categories));
     local.forEach(function (d) {
         let place = d.Place_Type;
-        categories.forEach(function (c) {
+        localCat.forEach(function (c) {
             if (c['sub'].includes(place)) {
                 c['count'] += 1;
 
             }
         });
     });
-    return JSON.parse(JSON.stringify(categories));
+    return localCat;
 }
 
 
