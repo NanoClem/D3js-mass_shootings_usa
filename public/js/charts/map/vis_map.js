@@ -1,6 +1,7 @@
 //Width and height of map
-var width = 960;
-var height = 500;
+var width = 1060;
+var height = 600;
+var centered;
 
 // Map's donut params
 let dMapWidth = 610;
@@ -146,16 +147,40 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function (data) {
 
 			// ON CLICK
 			.on("click", function (d) {
-				console.log(d.properties.name);
 				// GENERATE A NEW DONUT
 				let stateData = getStateData(d.properties.name, data);
-				mapDonut.clear();
 				mapDonut.generateDonut(dColors, dMapCategories, stateData, true);
-			});
-		// MOUSEOUT            
-		// .on("mouseout", function(d) {
-		// 	mapDonut.clear();
-		// });
+			})
+
+			// ON DOUBLE CLICK
+			.on("dblclick", double_clicked);
+
+
+		// ZOOM IN MAP
+		function double_clicked(d) {
+			var x, y, k;
+			
+			if (d && centered !== d) {
+				var centroid = path.centroid(d);
+				x = centroid[0];
+				y = centroid[1];
+				k = 4;
+				centered = d;
+			} else {
+				x = width / 2;
+				y = height / 2;
+				k = 1;
+				centered = null;
+			}
+			
+			svg.selectAll("path")
+				.classed("active", centered && function(d) { return d === centered; });
+			
+			svg.transition()
+				.duration(750)
+				.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")scale(" + k + ")translate(" + -x + "," + -y + ")")
+				.style("stroke-width", 1.5 / k + "px");
+			}
 
 
 		d3.dsv(';')("datasets/mass-shootings-in-america.csv", function (data) {
