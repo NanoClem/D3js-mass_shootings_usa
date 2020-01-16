@@ -272,8 +272,6 @@ class Donut {
 	 */
 	generateDonut(scheme, categories, data, doReduce = false) {
 
-		this.init();
-
 		// DONUT DATA
 		let donutData = null;
 		if (doReduce) {
