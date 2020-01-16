@@ -1,3 +1,38 @@
-.donut_chart {
-    margin-top: 10%;
+div.map_chart {
+    float: left;
+}
+
+div.sub_map {
+    width: 5%;
+}
+
+div.charts {
+    float: left;
+}
+
+div.infos {
+    border: solid 1px;
+}
+
+div.sub_charts {
+    float: left;
+}
+
+svg#legend {
+    padding-left: 2%;
+}
+
+
+div.donut_chart {
+    float: left;
+    margin-top: 5%;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
 }
