@@ -102,7 +102,9 @@ class Donut {
 				tooltip.transition()
 					.duration(200)
 					.style("opacity", 1);
-				tooltip.text(percentage(d.data.count, data) + "%")
+				// SHOW PERCENTAGE
+				let percentage = (d.endAngle - d.startAngle)/(2*Math.PI)*100; 
+				tooltip.text(percentage + "%")
 					.style("left", (d3.event.pageX) + "px")
 					.style("top", (d3.event.pageY - 28) + "px");
 			})
@@ -137,7 +139,7 @@ class Donut {
 			.text(function (d) {
 				return d.data.label;
 			});
-
+			
 		function midAngle(d) {
 			return d.startAngle + (d.endAngle - d.startAngle) / 2;
 		}
@@ -194,11 +196,20 @@ class Donut {
 
 
 	/**
-	 * Regroup data into a smaller number of categories
-	 * @param {*} new_categories 
+	 * Remove data element which have a count value equals to 0
+	 * @param {*} data 
+	 * @param {*} colors 
 	 */
-	reCategorize(new_categories) {
+	format(data) {
 
+		let local = JSON.parse(JSON.stringify(data));
+		// REMOVE COUNTS VALUE EQUALS TO 0
+		local.forEach(function (d) {
+			if (d.count == 0) {
+				local.splice(local.indexOf(d), 1);
+			}
+		});
+		return local;
 	}
 
 
@@ -215,6 +226,26 @@ class Donut {
 
 
 	/**
+	 * Regroup data into a smaller number of categories
+	 * @param {*} new_categories 
+	 */
+	reCategorize(categories, data) {
+
+		let local = JSON.parse(JSON.stringify(data));
+		let localCat = JSON.parse(JSON.stringify(categories));
+		local.forEach(function (d) {
+			let place = d.Place_Type;
+			localCat.forEach(function (c) {
+				if (c['sub'].includes(place)) {
+					c['count'] += 1;
+				}
+			});
+		});
+		return localCat;
+	}
+
+
+	/**
 	 * Count occurences in data
 	 * @param {Array<JSON>} data 
 	 */
@@ -225,9 +256,8 @@ class Donut {
 		local.forEach(function (d) {
 			let place = d.Place_Type;
 			localCat.forEach(function (c) {
-				if (c['sub'].includes(place)) {
+				if (c['label'] == place) {
 					c['count'] += 1;
-
 				}
 			});
 		});
@@ -236,28 +266,28 @@ class Donut {
 
 
 	/**
-	 * Returns the percentage
-	 * @param {*} value
-	 * @param {Array<JSON>} data 
-	 */
-	getPercentage(value, data) {
-		let local = JSON.parse(JSON.stringify(data));   // deep copy of JSON array
-		let sum = 0;
-		local.forEach(function (d) {
-			sum += d.count;
-		})
-		return Math.floor((value / sum) * 100);
-	}
-
-
-	/**
 	 * 
 	 * @param {*} scheme 
 	 * @param {*} data 
 	 */
-	generateDonut(scheme, categories, data) {
+	generateDonut(scheme, categories, data, doReduce = false) {
 
 		this.init();
+
+		// DONUT DATA
+		let donutData = null;
+		if (doReduce) {
+			donutData = this.reCategorize(categories, data).sort(function (a, b) {
+				return a.count - b.count;
+			});
+		} else {
+			donutData = this.countOccurences(categories, data).sort(function (a, b) {
+				return a.count - b.count;
+			});
+		}
+
+		// FORMAT CHART ELEMENTS
+		donutData = this.format(donutData, scheme);
 
 		// LABELS
 		let domain = this.getLabels(categories);
@@ -266,11 +296,6 @@ class Donut {
 		let colors = d3.scale.ordinal()
 			.domain(domain)
 			.range(scheme);
-
-		// DONUT DATA
-		let donutData = this.countOccurences(categories, data).sort(function (a, b) {
-			return a.count - b.count;
-		});
 
 		this.change(colors, donutData);
 	}
