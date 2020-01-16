@@ -3,16 +3,16 @@ var width = 960;
 var height = 500;
 
 // Map's donut params
-let dMapWidth = 660;
-let dMapHeight = 250;
+let dMapWidth = 610;
+let dMapHeight = 200;
 let dColors = ["#390B06", "#6F332D", "#17193C", "#647375", "#a3bcbf"];
-let mapDonut = new Donut(dMapWidth, dMapHeight, "#mapDonut", "mDonutTooltip");
+let mapDonut = new Donut(dMapWidth, dMapHeight, "#targetPlaces", "mDonutTooltip");
 
 let dMapCategories = [
 	{ label: "Home and neighborhood", sub: ["Residential home/Neighborhood, Retail/Wholesale/Services facility", "Residential home/Neighborhood"], count: 0 },
 	{ label: "School and educationnal", sub: ["Primary school", "Secondary school", "College/University/Adult education"], count: 0 },
 	{ label: "Public facilities", sub: ["Medical/Care", "Public transportation", "Park/Wilderness", "Place of worship", "Restaurant/Cafe", "Retail/Wholesale/Services facility", "Entertainment Venue", "Street/Highway"], count: 0 },
-	{ label: "Government and military facilities", sub: ["Government facility", "Military facility"], count: 0 },
+	{ label: "Government/military facilities", sub: ["Government facility", "Military facility"], count: 0 },
 	{ label: "Work place", sub: ["Company/Factory/Office"], count: 0 }
 ];
 
@@ -25,8 +25,40 @@ var svg = d3.select("#map")
 // Append Div for tooltip to SVG
 var div = d3.select("body")
 	.append("div")
-	.attr("class", "tooltip")
-	.style("opacity", 0);
+		.attr("class", "tooltip")
+		.style("opacity", 0)
+
+
+// APPEND INFORMATIONS FIELDS IN THE TOOLTIP
+
+// VICTIMS
+let tooltipVictims = div.append("div")
+	.attr("id", "victims");
+
+tooltipVictims.append("div")
+   .attr("id", "killed");
+
+tooltipVictims.append("div")
+   .attr("id", "injured");
+
+// DRAWING LINE
+let tooltipLine = div.append("hr")
+	.attr("id", "separator");
+
+// CONTEXT
+let tootipcontext = div.append("div")
+	.attr("id", "context");
+
+tootipcontext.append("div")
+   .attr("id", "title");
+
+tootipcontext.append("div")
+   .attr("id", "date");
+
+// DESCRIPTION
+div.append("div")
+   .attr("id", "description");
+
 
 
 // D3 Projection
@@ -93,29 +125,32 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function (data) {
 			.data(json.features)
 			.enter()
 			.append("path")
-			.attr("d", path)
-			.style("stroke", "#fff")
-			.style("stroke-width", "1")
-			.style("fill", function (d) {
-				// Get data value
-				var value = d.properties.r;
-				// console.log(value);
-				if (value) {
-					return color(value);
-				} else {
-					return color(0);
-				}
-			})
+				.attr("d", path)
+				.style("stroke", "#fff")
+				.style("stroke-width", "1")
+				.style("fill", function (d) {
+					// Get data value
+					var value = d.properties.r;
+					// console.log(value);
+					if (value) {
+						return color(value);
+					} else {
+						return color(0);
+					}
+				})
 
 			// MOUSEOVER
 			.on("mouseover", function (d) {
-				// GENERATE A NEW DONUT
-				mapDonut.clear();
-				mapDonut.generateDonut(dColors, dMapCategories, data);
+
 			})
+
 			// ON CLICK
 			.on("click", function (d) {
-				console.log(data);
+				console.log(d.properties.name);
+				// GENERATE A NEW DONUT
+				let stateData = getStateData(d.properties.name, data);
+				mapDonut.clear();
+				mapDonut.generateDonut(dColors, dMapCategories, stateData, true);
 			});
 		// MOUSEOUT            
 		// .on("mouseout", function(d) {
@@ -123,7 +158,6 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function (data) {
 		// });
 
 
-		// Map the cities I have lived in!
 		d3.dsv(';')("datasets/mass-shootings-in-america.csv", function (data) {
 
 			svg.selectAll("circle")
@@ -143,23 +177,34 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function (data) {
 				.style("fill", "rgb(217,91,67)")
 				.style("opacity", 0.85)
 
+
 				// Modification of custom tooltip code provided by Malcolm Maclean, "D3 Tips and Tricks" 
 				// http://www.d3noob.org/2013/01/adding-tooltips-to-d3js-graph.html
 				.on("mouseover", function (d) {
-
-
 					div.transition()
 						.duration(200)
-						.style("opacity", 1);
-					div.text(d.Total_Number_of_Victims + " Victimes")
+						.style("opacity", 1)
 						.style("left", (d3.event.pageX) + "px")
 						.style("top", (d3.event.pageY - 28) + "px");
-					document.getElementById("Etat").textContent = "Etat : " + d.State;
-					document.getElementById("Ville").textContent = "Ville : " + d.City;
-					document.getElementById("Fusillade").textContent = "Titre de la fusillade : " + d.Title;
+					// FILL INFORMATIONS ABOUT THE SHOOTING
+					d3.select("#killed")
+					  .html("<b><font color=\"red\">" + Math.floor(d.Number_of_Victim_Fatalities) + "</font></b>" + " killed");
+
+					d3.select("#injured")
+					  .html("<b><font color=\"red\">" + Math.floor(d.Number_of_Victims_Injured) + "</font></b>" + " injured");
+
+					d3.select("#title")
+						.text(d.Title);
+
+					d3.select("#date")
+						.text(d.Date_detailed);
+
+					d3.select("#description")
+						.text(d.Description);
 
 				})
 
+				
 				// fade out tooltip on mouse out               
 				.on("mouseout", function (d) {
 					div.transition()
