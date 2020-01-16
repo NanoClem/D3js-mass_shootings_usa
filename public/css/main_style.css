@@ -1,21 +1,24 @@
-div.map_chart {
+/* COMMON TO ALL CHARTS */
+div.charts {
     float: left;
+}
+
+div.sub_charts {
+    float: left;
+}
+
+
+/* MAP CHART */
+div.map_chart {
+    
 }
 
 div.sub_map {
     width: 5%;
 }
 
-div.charts {
-    float: left;
-}
-
 div.infos {
     border: solid 1px;
-}
-
-div.sub_charts {
-    float: left;
 }
 
 svg#legend {
@@ -23,9 +26,15 @@ svg#legend {
 }
 
 
+/* DONUT CHART */
 div.donut_chart {
-    float: left;
-    margin-top: 5%;
+
+}
+
+
+/* GENERAL */
+h1 {
+    font-family: sans-serif; 
 }
 
 hr {
