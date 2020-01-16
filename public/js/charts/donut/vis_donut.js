@@ -16,7 +16,6 @@ let categories = [
 d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
 
 	let donut = new Donut(dWidth, dHeight, "#donut", "donutTooltip");
-	donut.clear();
 	donut.generateDonut(colors, categories, data, true);
 });
 
