@@ -1,6 +1,6 @@
 // PARAMS
-let dWidth = 960;
-let dHeight = 450;
+let dWidth = 860;
+let dHeight = 350;
 let colors = ["#390B06", "#6F332D", "#17193C", "#647375", "#a3bcbf"];
 
 let categories = [
@@ -17,6 +17,6 @@ d3.dsv(';')("datasets/mass-shootings-in-america.csv", function(data) {
 
 	let donut = new Donut(dWidth, dHeight, "#donut", "donutTooltip");
 	donut.clear();
-	donut.generateDonut(colors, categories, data);
+	donut.generateDonut(colors, categories, data, true);
 });
 
