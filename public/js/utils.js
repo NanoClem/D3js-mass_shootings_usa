@@ -24,3 +24,21 @@ function reducevalue(value) {
     return value
 }
 
+
+/**
+ * Get all data refering to a State
+ * @param {*} state 
+ * @param {*} data 
+ */
+function getStateData(state, data) {
+
+    let ret = [];
+    let local = JSON.parse(JSON.stringify(data));   // deep copy of JSON array
+    local.forEach(function (d) {
+        if(d.State == state) {
+            ret.push(d);
+        }
+    });
+    return ret;
+}
+
