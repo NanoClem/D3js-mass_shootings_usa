@@ -2,7 +2,7 @@
 D3js data visualisation of mass shootings in USA
 
 ## Installation
-Get nodejs if not installed yet : https://nodejs.org
+Get nodejs if not installed yet : https://nodejs.org.  
 In the project folder, run `npm install`.
 
 ## Run
