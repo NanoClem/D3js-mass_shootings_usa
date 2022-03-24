@@ -1,0 +1,10 @@
+---
+version: "3.7"
+services:
+  dashboard:
+    container_name: mass_shootings_dashboard
+    build: .
+    ports:
+      - 3000:3000
+    volumes:
+      - ./public:/usr/src/project/public
