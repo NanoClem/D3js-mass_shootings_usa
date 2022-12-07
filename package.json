@@ -18,6 +18,6 @@
   "homepage": "https://github.com/NanoClem/D3js-mass_shootings_usa#readme",
   "dependencies": {
     "d3": "^5.15.0",
-    "express": "^4.17.1"
+    "express": "^4.18.2"
   }
 }
